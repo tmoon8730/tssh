@@ -68,7 +68,14 @@ func RemoveTemplate(name string, filePath string) *SSHTemplate {
 func ListTemplates(filePath string) *map[string]SSHTemplate {
 	templateMap := ReadFromFile(filePath)
 
-	fmt.Println(templateMap)
+	fmt.Println("=== Saved SSH Templates ===")
+	for key, element := range templateMap {
+		fmt.Print(key, ":  ssh ")
+		for i := 0; i < len(element.Arguments); i++ {
+			fmt.Print(element.Arguments[i], " ")
+		}
+		fmt.Println()
+	}
 	return &templateMap
 }
 
