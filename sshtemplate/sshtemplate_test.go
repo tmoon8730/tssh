@@ -1,4 +1,4 @@
-package main
+package sshtemplate
 
 import (
 	"encoding/json"
@@ -8,7 +8,7 @@ import (
 	"testing"
 )
 
-func Test_addTemplate(t *testing.T) {
+func Test_AddTemplate(t *testing.T) {
 	filePath := "test.json"
 	os.Create(filePath)
 
@@ -19,13 +19,13 @@ func Test_addTemplate(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
-		want *sshTemplate
+		want *SSHTemplate
 	}{
-		{"testName", args{name: "testName", command: "testCommand"}, &sshTemplate{Name: "testName", Command: "testCommand"}},
+		{"testName", args{name: "testName", command: "testCommand"}, &SSHTemplate{Name: "testName", Command: "testCommand"}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := addTemplate(tt.args.name, tt.args.command, filePath); !reflect.DeepEqual(got, tt.want) {
+			if got := AddTemplate(tt.args.name, tt.args.command, filePath); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("addTemplate() = %v, want %v", got, tt.want)
 			}
 		})
@@ -34,8 +34,8 @@ func Test_addTemplate(t *testing.T) {
 	os.Remove(filePath)
 }
 
-func Test_removeTemplate(t *testing.T) {
-	data := map[string]sshTemplate{"testName": {Name: "testName", Command: "testCommand"}}
+func Test_RemoveTemplate(t *testing.T) {
+	data := map[string]SSHTemplate{"testName": {Name: "testName", Command: "testCommand"}}
 	file, _ := json.MarshalIndent(data, "", " ")
 	filePath := "test.json"
 	os.Create(filePath)
@@ -48,13 +48,13 @@ func Test_removeTemplate(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
-		want *sshTemplate
+		want *SSHTemplate
 	}{
-		{"testName", args{name: "testName"}, &sshTemplate{Name: "testName", Command: "testCommand"}},
+		{"testName", args{name: "testName"}, &SSHTemplate{Name: "testName", Command: "testCommand"}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := removeTemplate(tt.args.name, filePath); !reflect.DeepEqual(got, tt.want) {
+			if got := RemoveTemplate(tt.args.name, filePath); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("removeTemplate() = %v, want %v", got, tt.want)
 			}
 		})
@@ -63,8 +63,8 @@ func Test_removeTemplate(t *testing.T) {
 	os.Remove(filePath)
 }
 
-func Test_readFromFile(t *testing.T) {
-	data := map[string]sshTemplate{"testName": {Name: "testName", Command: "testCommand"}}
+func Test_ReadFromFile(t *testing.T) {
+	data := map[string]SSHTemplate{"testName": {Name: "testName", Command: "testCommand"}}
 	file, _ := json.MarshalIndent(data, "", " ")
 	filePath := "test.json"
 	os.Create(filePath)
@@ -72,7 +72,7 @@ func Test_readFromFile(t *testing.T) {
 	ioutil.WriteFile(filePath, file, 0644)
 
 	t.Run("test reading", func(t *testing.T) {
-		if got := readFromFile(filePath); !reflect.DeepEqual(got, data) {
+		if got := ReadFromFile(filePath); !reflect.DeepEqual(got, data) {
 			t.Errorf("readFromFile() = %v, want %v", got, data)
 		}
 	})
@@ -80,16 +80,16 @@ func Test_readFromFile(t *testing.T) {
 	os.Remove(filePath)
 }
 
-func Test_writeToFile(t *testing.T) {
-	data := map[string]sshTemplate{"testName": {Name: "testName", Command: "testCommand"}}
+func Test_WriteToFile(t *testing.T) {
+	data := map[string]SSHTemplate{"testName": {Name: "testName", Command: "testCommand"}}
 	filePath := "test.json"
 	os.Create(filePath)
 
 	t.Run("test writing", func(t *testing.T) {
-		writeToFile(data, filePath)
+		WriteToFile(data, filePath)
 
 		fileData, _ := ioutil.ReadFile(filePath)
-		res := map[string]sshTemplate{}
+		res := map[string]SSHTemplate{}
 		json.Unmarshal(fileData, &res)
 
 		if !reflect.DeepEqual(res, data) {

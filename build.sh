@@ -17,6 +17,8 @@ EXIT_STATUS=$?
 
 if [ $EXIT_STATUS == 0 ]; then
     echo "Build succeeded"
+
+    ./bin/tssh help
 else
     echo "Build failed"
 fi 
