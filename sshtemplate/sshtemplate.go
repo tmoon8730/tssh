@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
+	"sshtemplate/utilities"
 	"syscall"
 )
 
@@ -19,13 +20,13 @@ type SSHTemplate struct {
 func WriteToFile(data map[string]SSHTemplate, filePath string) {
 	file, _ := json.MarshalIndent(data, "", " ")
 	err := ioutil.WriteFile(filePath, file, 0644)
-	check(err)
+	utilities.Check(err)
 }
 
 // ReadFromFile reads a map of sshTemplate structs from a json file
 func ReadFromFile(filePath string) map[string]SSHTemplate {
 	dat, err := ioutil.ReadFile(filePath)
-	check(err)
+	utilities.Check(err)
 
 	res := map[string]SSHTemplate{}
 	json.Unmarshal(dat, &res)
@@ -84,17 +85,11 @@ func ExecuteCommand(template SSHTemplate) {
 	fmt.Println("Executing SSH command for", template.Arguments)
 
 	binary, lookErr := exec.LookPath("ssh")
-	check(lookErr)
+	utilities.Check(lookErr)
 
 	args := append([]string{"ssh"}, template.Arguments...)
 	env := os.Environ()
 
 	execErr := syscall.Exec(binary, args, env)
-	check(execErr)
-}
-
-func check(e error) {
-	if e != nil {
-		panic(e)
-	}
+	utilities.Check(execErr)
 }
