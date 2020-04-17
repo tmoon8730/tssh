@@ -11,8 +11,8 @@ import (
 
 // SSHTemplate maps a name to a command
 type SSHTemplate struct {
-	Name    string
-	Command string
+	Name      string
+	Arguments []string
 }
 
 // WriteToFile writes a map of sshTemplate structs to json file
@@ -34,12 +34,12 @@ func ReadFromFile(filePath string) map[string]SSHTemplate {
 }
 
 // AddTemplate creates a new template and writes it to a file
-func AddTemplate(name string, command string, filePath string) *SSHTemplate {
+func AddTemplate(name string, filePath string, arguments []string) *SSHTemplate {
 	templateArray := ReadFromFile(filePath)
 
 	newTemplate := SSHTemplate{
-		Name:    name,
-		Command: command,
+		Name:      name,
+		Arguments: arguments,
 	}
 
 	templateArray[name] = newTemplate
@@ -74,12 +74,12 @@ func ListTemplates(filePath string) *map[string]SSHTemplate {
 
 // ExecuteCommand recalls a saved command and attempts to execute it
 func ExecuteCommand(template SSHTemplate) {
-	fmt.Println("Executing SSH command for", template.Command)
+	fmt.Println("Executing SSH command for", template.Arguments)
 
 	binary, lookErr := exec.LookPath("ssh")
 	check(lookErr)
 
-	args := []string{"ssh", template.Command}
+	args := append([]string{"ssh"}, template.Arguments...)
 	env := os.Environ()
 
 	execErr := syscall.Exec(binary, args, env)

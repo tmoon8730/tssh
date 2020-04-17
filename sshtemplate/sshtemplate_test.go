@@ -13,19 +13,19 @@ func Test_AddTemplate(t *testing.T) {
 	os.Create(filePath)
 
 	type args struct {
-		name    string
-		command string
+		name      string
+		arguments []string
 	}
 	tests := []struct {
 		name string
 		args args
 		want *SSHTemplate
 	}{
-		{"testName", args{name: "testName", command: "testCommand"}, &SSHTemplate{Name: "testName", Command: "testCommand"}},
+		{"testName", args{name: "testName", arguments: []string{"testCommand"}}, &SSHTemplate{Name: "testName", Arguments: []string{"testCommand"}}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := AddTemplate(tt.args.name, tt.args.command, filePath); !reflect.DeepEqual(got, tt.want) {
+			if got := AddTemplate(tt.args.name, filePath, tt.args.arguments); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("addTemplate() = %v, want %v", got, tt.want)
 			}
 		})
@@ -35,7 +35,7 @@ func Test_AddTemplate(t *testing.T) {
 }
 
 func Test_RemoveTemplate(t *testing.T) {
-	data := map[string]SSHTemplate{"testName": {Name: "testName", Command: "testCommand"}}
+	data := map[string]SSHTemplate{"testName": {Name: "testName", Arguments: []string{"testCommand2"}}}
 	file, _ := json.MarshalIndent(data, "", " ")
 	filePath := "test.json"
 	os.Create(filePath)
@@ -50,7 +50,7 @@ func Test_RemoveTemplate(t *testing.T) {
 		args args
 		want *SSHTemplate
 	}{
-		{"testName", args{name: "testName"}, &SSHTemplate{Name: "testName", Command: "testCommand"}},
+		{"testName", args{name: "testName"}, &SSHTemplate{Name: "testName", Arguments: []string{"testCommand2"}}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -64,7 +64,7 @@ func Test_RemoveTemplate(t *testing.T) {
 }
 
 func TestListTemplates(t *testing.T) {
-	data := map[string]SSHTemplate{"testName": {Name: "testName", Command: "testCommand"}, "testName2": {Name: "testName2", Command: "testCommand2"}}
+	data := map[string]SSHTemplate{"testName": {Name: "testName", Arguments: []string{"testCommand"}}, "testName2": {Name: "testName2", Arguments: []string{"testCommand2"}}}
 	file, _ := json.MarshalIndent(data, "", " ")
 	filePath := "test.json"
 	os.Create(filePath)
@@ -79,7 +79,7 @@ func TestListTemplates(t *testing.T) {
 		args args
 		want *map[string]SSHTemplate
 	}{
-		{"list templates", args{name: "testName"}, &map[string]SSHTemplate{"testName": {Name: "testName", Command: "testCommand"}, "testName2": {Name: "testName2", Command: "testCommand2"}}},
+		{"list templates", args{name: "testName"}, &map[string]SSHTemplate{"testName": {Name: "testName", Arguments: []string{"testCommand"}}, "testName2": {Name: "testName2", Arguments: []string{"testCommand2"}}}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -93,7 +93,7 @@ func TestListTemplates(t *testing.T) {
 }
 
 func Test_ReadFromFile(t *testing.T) {
-	data := map[string]SSHTemplate{"testName": {Name: "testName", Command: "testCommand"}}
+	data := map[string]SSHTemplate{"testName": {Name: "testName", Arguments: []string{"testCommand2"}}}
 	file, _ := json.MarshalIndent(data, "", " ")
 	filePath := "test.json"
 	os.Create(filePath)
@@ -110,7 +110,7 @@ func Test_ReadFromFile(t *testing.T) {
 }
 
 func Test_WriteToFile(t *testing.T) {
-	data := map[string]SSHTemplate{"testName": {Name: "testName", Command: "testCommand"}}
+	data := map[string]SSHTemplate{"testName": {Name: "testName", Arguments: []string{"testCommand2"}}}
 	filePath := "test.json"
 	os.Create(filePath)
 

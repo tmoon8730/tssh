@@ -9,16 +9,19 @@ import (
 	"github.com/urfave/cli"
 )
 
+const saveFilePath = "tempData.json"
+
 func main() {
 	app := &cli.App{
 		// tssh <name>
 		Action: func(c *cli.Context) error {
 			argName := c.Args().First()
 
-			a := sshtemplate.ReadFromFile("tempData.json")
+			a := sshtemplate.ReadFromFile(saveFilePath)
 			template := a[argName]
+
 			sshtemplate.ExecuteCommand(template)
-			fmt.Println(template.Command)
+			fmt.Println(template.Arguments)
 			return nil
 		},
 		Commands: []cli.Command{
@@ -33,9 +36,8 @@ func main() {
 						Usage: "add a new template",
 						Action: func(c *cli.Context) error {
 							name := c.Args().First()
-							command := c.Args().Get(1)
-
-							sshtemplate.AddTemplate(name, command, "tempData.json")
+							arguments := c.Args()[1:]
+							sshtemplate.AddTemplate(name, saveFilePath, arguments)
 
 							return nil
 						},
@@ -47,7 +49,7 @@ func main() {
 						Action: func(c *cli.Context) error {
 							name := c.Args().First()
 
-							sshtemplate.RemoveTemplate(name, "tempData.json")
+							sshtemplate.RemoveTemplate(name, saveFilePath)
 							return nil
 						},
 					},
@@ -56,7 +58,7 @@ func main() {
 						Name:  "list",
 						Usage: "list existing templates",
 						Action: func(c *cli.Context) error {
-							sshtemplate.ListTemplates("tempData.json")
+							sshtemplate.ListTemplates(saveFilePath)
 							return nil
 						},
 					},
