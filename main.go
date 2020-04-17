@@ -51,6 +51,15 @@ func main() {
 							return nil
 						},
 					},
+					// tssh template list
+					{
+						Name:  "list",
+						Usage: "list existing templates",
+						Action: func(c *cli.Context) error {
+							sshtemplate.ListTemplates("tempData.json")
+							return nil
+						},
+					},
 				},
 			},
 			{

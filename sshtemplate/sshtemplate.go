@@ -64,6 +64,14 @@ func RemoveTemplate(name string, filePath string) *SSHTemplate {
 	return &template
 }
 
+// ListTemplates lists existing templates
+func ListTemplates(filePath string) *map[string]SSHTemplate {
+	templateMap := ReadFromFile(filePath)
+
+	fmt.Println(templateMap)
+	return &templateMap
+}
+
 // ExecuteCommand recalls a saved command and attempts to execute it
 func ExecuteCommand(template SSHTemplate) {
 	fmt.Println("Executing SSH command for", template.Command)

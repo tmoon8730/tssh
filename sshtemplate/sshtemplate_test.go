@@ -63,6 +63,35 @@ func Test_RemoveTemplate(t *testing.T) {
 	os.Remove(filePath)
 }
 
+func TestListTemplates(t *testing.T) {
+	data := map[string]SSHTemplate{"testName": {Name: "testName", Command: "testCommand"}, "testName2": {Name: "testName2", Command: "testCommand2"}}
+	file, _ := json.MarshalIndent(data, "", " ")
+	filePath := "test.json"
+	os.Create(filePath)
+
+	ioutil.WriteFile(filePath, file, 0644)
+
+	type args struct {
+		name string
+	}
+	tests := []struct {
+		name string
+		args args
+		want *map[string]SSHTemplate
+	}{
+		{"list templates", args{name: "testName"}, &map[string]SSHTemplate{"testName": {Name: "testName", Command: "testCommand"}, "testName2": {Name: "testName2", Command: "testCommand2"}}},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := ListTemplates(filePath); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("removeTemplate() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+
+	os.Remove(filePath)
+}
+
 func Test_ReadFromFile(t *testing.T) {
 	data := map[string]SSHTemplate{"testName": {Name: "testName", Command: "testCommand"}}
 	file, _ := json.MarshalIndent(data, "", " ")
