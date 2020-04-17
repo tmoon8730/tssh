@@ -17,8 +17,9 @@ EXIT_STATUS=$?
 
 if [ $EXIT_STATUS == 0 ]; then
     echo "Build succeeded"
-
+    go test ./sshtemplate
     ./bin/tssh help
+    sudo cp ./bin/tssh /usr/local/bin/
 else
     echo "Build failed"
 fi 
