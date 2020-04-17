@@ -9,9 +9,10 @@ import (
 	"github.com/urfave/cli"
 )
 
-const saveFilePath = "tempData.json"
-
 func main() {
+	home, _ := os.UserHomeDir()
+	saveFilePath := home + "/.tssh/data.json"
+
 	app := &cli.App{
 		// tssh <name>
 		Action: func(c *cli.Context) error {
