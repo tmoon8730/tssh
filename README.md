@@ -1,6 +1,8 @@
 # tssh
 A simple Go CLI utility for storing and recalling SSH commands
 
+Download the latest [release](https://github.com/tmoon8730/tssh/releases)
+and copy the binary to `/usr/local/bin/` for global execution. 
 ## Usage
 **Add a new template**: `tssh template add <name> <ssh_arguments>`
 
