@@ -5,13 +5,20 @@ import (
 	"log"
 	"os"
 	"sshtemplate/sshtemplate"
+	"sshtemplate/utilities"
 
 	"github.com/urfave/cli"
 )
 
 func main() {
 	home, _ := os.UserHomeDir()
-	saveFilePath := home + "/.tssh/data.json"
+	saveDir := home + "/.tssh/"
+	saveFilePath := saveDir + "data.json"
+	if _, err := os.Stat(saveFilePath); os.IsNotExist(err) {
+		err := os.Mkdir(saveDir,0755)
+		utilities.CreateEmptyFile(saveFilePath)
+		utilities.Check(err)
+	}
 
 	app := &cli.App{
 		// tssh <name>
