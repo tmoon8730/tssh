@@ -24,10 +24,7 @@ func main() {
 		// tssh <name>
 		Action: func(c *cli.Context) error {
 			argName := c.Args().First()
-
-			a := sshtemplate.ReadFromFile(saveFilePath)
-			template := a[argName]
-
+			template := sshtemplate.ReadFromFile(saveFilePath)[argName]
 			sshtemplate.ExecuteCommand(template)
 			fmt.Println(template.Arguments)
 			return nil
@@ -46,7 +43,6 @@ func main() {
 							name := c.Args().First()
 							arguments := c.Args()[1:]
 							sshtemplate.AddTemplate(name, saveFilePath, arguments)
-
 							return nil
 						},
 					},
@@ -56,7 +52,6 @@ func main() {
 						Usage: "remove an existing template",
 						Action: func(c *cli.Context) error {
 							name := c.Args().First()
-
 							sshtemplate.RemoveTemplate(name, saveFilePath)
 							return nil
 						},

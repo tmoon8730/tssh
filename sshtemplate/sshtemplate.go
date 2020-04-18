@@ -18,18 +18,18 @@ type SSHTemplate struct {
 
 // WriteToFile writes a map of sshTemplate structs to json file
 func WriteToFile(data map[string]SSHTemplate, filePath string) {
-	file, _ := json.MarshalIndent(data, "", " ")
-	err := ioutil.WriteFile(filePath, file, 0644)
+	fileData, _ := json.MarshalIndent(data, "", " ")
+	err := ioutil.WriteFile(filePath, fileData, 0644)
 	utilities.Check(err)
 }
 
 // ReadFromFile reads a map of sshTemplate structs from a json file
 func ReadFromFile(filePath string) map[string]SSHTemplate {
-	dat, err := ioutil.ReadFile(filePath)
+	fileContent, err := ioutil.ReadFile(filePath)
 	utilities.Check(err)
 
 	res := map[string]SSHTemplate{}
-	json.Unmarshal(dat, &res)
+	json.Unmarshal(fileContent, &res)
 
 	return res
 }
@@ -77,6 +77,7 @@ func ListTemplates(filePath string) *map[string]SSHTemplate {
 		}
 		fmt.Println()
 	}
+
 	return &templateMap
 }
 
